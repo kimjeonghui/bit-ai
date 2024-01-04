@@ -1,9 +1,15 @@
 package com.nahwasa.springsecuritybasicsettingforspringboot3.domain;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
+
 @Entity
+@Getter
+@Setter
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +21,9 @@ public class Member {
     private String pw;
 
     private String roles;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<File> files;
 
     private Member(Long id, String userid, String pw, String roleUser) {
         this.id = id;
@@ -29,19 +38,4 @@ public class Member {
         return new Member(null, userId, passwordEncoder.encode(pw), "USER");
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getUserid() {
-        return userid;
-    }
-
-    public String getPw() {
-        return pw;
-    }
-
-    public String getRoles() {
-        return roles;
-    }
 }

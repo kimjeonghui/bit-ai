@@ -1,6 +1,7 @@
 package com.nahwasa.springsecuritybasicsettingforspringboot3.config;
 
 import com.nahwasa.springsecuritybasicsettingforspringboot3.domain.Member;
+
 import com.nahwasa.springsecuritybasicsettingforspringboot3.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -26,9 +27,9 @@ public class MyUserDetailService implements UserDetailsService {
         Member member = findOne.orElseThrow(() -> new UsernameNotFoundException("없는 회원입니다 ㅠ"));
 
         return User.builder()
-                .username(member.getUserid())
+                .username(member.getNickname())
                 .password(member.getPw())
-                .roles(member.getRoles())
+                .roles(member.getRole())
                 .build();
     }
 }

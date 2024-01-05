@@ -5,29 +5,31 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
+@Table(name = "file")
 public class File extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String fileId;
+    private Long fileId;
 
     private String originPath;
     private String resultPath;
-    private String result;
-    private LocalDateTime createdAt;
+    @ElementCollection
+    private List<String> result;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Member member;
+    private Long userId;
+
 
     @Builder
-    public File(Member member, String originPath, String resultPath, String result) {
-        this.member = member;
+    public File(Long userId, String originPath, String resultPath, List<String> result) {
+        this.userId = userId;
         this.originPath = originPath;
         this.resultPath = resultPath;
         this.result = result;

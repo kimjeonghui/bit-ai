@@ -10,32 +10,36 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Table(name = "member")
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)
-    private String userid;
+    private String nickname;
 
     private String pw;
 
-    private String roles;
+    private String role;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<File> files;
 
-    private Member(Long id, String userid, String pw, String roleUser) {
+
+    private Member(Long id, String nickname, String pw, String role) {
         this.id = id;
-        this.userid = userid;
+        this.nickname = nickname;
         this.pw = pw;
-        this.roles = roleUser;
+        this.role = role;
     }
 
     protected Member() {}
 
-    public static Member createUser(String userId, String pw, PasswordEncoder passwordEncoder) {
-        return new Member(null, userId, passwordEncoder.encode(pw), "USER");
+    public static Member createUser(String nickname, String pw, Integer role) {
+        if(role.equals(Integer.valueOf(1))){
+            return new Member(null, nickname, pw, "ADMIN");
+        }else{
+            return new Member(null, nickname, pw,"USER");
+        }
     }
 
 }

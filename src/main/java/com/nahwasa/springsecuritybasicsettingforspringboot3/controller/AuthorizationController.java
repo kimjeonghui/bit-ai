@@ -25,7 +25,6 @@ public class AuthorizationController {
     @PostMapping("/signup")
     public HttpStatus join(@RequestBody MemberDto.joinPost dto) {
         System.out.println("멤버 생성");
-        System.out.println(dto.getRole().getClass().getName());
         try {
             memberService.join(dto.getNickname(), dto.getPw(), dto.getRole());
             return HttpStatus.OK;

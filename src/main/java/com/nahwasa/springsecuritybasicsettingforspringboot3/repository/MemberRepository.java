@@ -24,4 +24,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("SELECT count(m) FROM Member m WHERE m.createdAt >= :start AND m.createdAt < :end")
     Long countMembersByCreatedAt(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
+
+
 }

@@ -2,23 +2,20 @@ package com.nahwasa.springsecuritybasicsettingforspringboot3.controller;
 
 import com.nahwasa.springsecuritybasicsettingforspringboot3.domain.Member;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.MemberDto;
+import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.ResponseDTO;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-public class AuthorizationController {
+public class MemberController {
 
     private final MemberService memberService;
 
@@ -58,6 +55,19 @@ public class AuthorizationController {
 
     }
 
+    @PatchMapping
+    public ResponseEntity<?> setAnimal(@RequestBody MemberDto.AnimalDto dto) throws Exception {
+        Member member = memberService.updateAnimal(dto.getNickname(), dto.getAnimal());
+        MemberDto.AnimalDto res = new MemberDto.AnimalDto(member.getNickname(), member.getAnimal());
+        ResponseDTO responseBody = new ResponseDTO(HttpStatus.OK, "성공", res);
+        return ResponseEntity.ok(responseBody);
+    }
 
+    @GetMapping("/{member-id}")
+    public ResponseEntity<?> getAnimal(@PathVariable("member-id")long memberId) throws Exception {
+        MemberDto.AnimalDto animal = memberService.getAnimal(memberId);
+        ResponseDTO responseBody = new ResponseDTO(HttpStatus.OK, "성공", animal);
+        return ResponseEntity.ok(responseBody);
+    }
 
 }

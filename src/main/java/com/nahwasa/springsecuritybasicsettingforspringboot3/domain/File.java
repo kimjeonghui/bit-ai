@@ -4,7 +4,6 @@ import com.nahwasa.springsecuritybasicsettingforspringboot3.common.BaseTimeEntit
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity

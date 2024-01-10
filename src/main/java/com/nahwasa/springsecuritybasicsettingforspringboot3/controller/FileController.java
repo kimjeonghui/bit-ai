@@ -1,17 +1,12 @@
 package com.nahwasa.springsecuritybasicsettingforspringboot3.controller;
 
-import com.nahwasa.springsecuritybasicsettingforspringboot3.config.AdminAuthorize;
-import com.nahwasa.springsecuritybasicsettingforspringboot3.config.UserAuthorize;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.FileDto;
-import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.MemberDto;
-import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.PageInfoDTO;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor

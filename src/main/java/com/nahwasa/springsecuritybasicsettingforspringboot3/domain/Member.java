@@ -3,15 +3,12 @@ package com.nahwasa.springsecuritybasicsettingforspringboot3.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "member")
-public class Member {
+public class Member extends TimeBaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,8 +19,6 @@ public class Member {
     private String pw;
 
     private String role;
-
-
 
     private Member(Long id, String nickname, String pw, String role) {
         this.id = id;

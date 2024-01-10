@@ -1,6 +1,7 @@
 package com.nahwasa.springsecuritybasicsettingforspringboot3.service;
 
 import com.nahwasa.springsecuritybasicsettingforspringboot3.domain.File;
+import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.DashboardDto;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.FileDto;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.PageInfoDTO;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.repository.FileRepository;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,9 +20,11 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FileService {
     private final FileRepository fileRepository;
 
+    @Transactional(readOnly = false)
     public void saveFile(FileDto fileDto){
         File file = File.builder()
                 .userId(fileDto.getUserId())
@@ -70,4 +74,11 @@ public class FileService {
         return response;
     }
 
+    public DashboardDto.DogsCountByBreedDto dogsCountByBreed() {
+        fi
+        return DashboardDto.DogsCountByBreedDto.builder()
+                .currentDayDogs(null)
+                .previousDayDogs(null)
+                .build();
+    }
 }

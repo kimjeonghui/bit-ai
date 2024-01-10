@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.StringTokenizer;
 
 @Slf4j
-//@RestControllerAdvice
+@RestControllerAdvice
 public class MyExceptionAdvice {
 
     @MyErrorLog

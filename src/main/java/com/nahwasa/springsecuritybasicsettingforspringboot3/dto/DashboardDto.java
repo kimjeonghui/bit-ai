@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class DashboardDto {
@@ -17,6 +16,7 @@ public class DashboardDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class DogsCountByBreedDto{
-        private Map<String, Long> dogs = new HashMap<>();
+        private Map<String, Long> currentDayDogs;
+        private Map<String, Long> previousDayDogs;
     }
 }

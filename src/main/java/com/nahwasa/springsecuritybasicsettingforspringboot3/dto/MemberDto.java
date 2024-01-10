@@ -50,4 +50,14 @@ public class MemberDto {
     public static class TodayJoinMemberCountDto{
         private Long count;
     }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AnimalDto{
+
+        private String nickname;
+        private Integer animal;
+    }
 }

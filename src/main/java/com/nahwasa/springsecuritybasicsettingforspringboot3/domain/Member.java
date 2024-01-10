@@ -21,6 +21,8 @@ public class Member extends TimeBaseEntity {
 
     private String role;
 
+    private Integer animal;
+
     private Member(Long id, String nickname, String pw, String role) {
         this.id = id;
         this.nickname = nickname;

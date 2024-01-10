@@ -18,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 public class MemberService {
 
     public static final LocalDateTime LOCAL_DATE_TIME = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
@@ -83,5 +83,21 @@ public class MemberService {
         return MemberDto.TodayJoinMemberCountDto.builder()
                 .count(count)
                 .build();
+    }
+
+    public Member updateAnimal(String nickname, Integer animal) throws Exception {
+        Optional<Member> member = findOne(nickname);
+        if(member.isEmpty())throw  new Exception("멤버가 존재하지 않습니다.");
+        Member findedMember = member.get();
+        findedMember.setAnimal(animal);
+        return memberRepository.save(findedMember);
+
+    }
+
+    public MemberDto.AnimalDto getAnimal(Long memberId) throws Exception {
+        Optional<Member> byId = memberRepository.findById(memberId);
+        if(byId.isEmpty())throw  new Exception("멤버가 존재하지 않습니다.");
+        Member findedMember = byId.get();
+        return new MemberDto.AnimalDto(findedMember.getNickname(), findedMember.getAnimal());
     }
 }

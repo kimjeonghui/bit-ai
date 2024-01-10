@@ -12,10 +12,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,11 +74,64 @@ public class FileService {
         return response;
     }
 
-    public DashboardDto.DogsCountByBreedDto dogsCountByBreed() {
-        fi
+    public DashboardDto.DogsCountByBreedDto dogsCountByBreed(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate findDate = LocalDate.parse(date, formatter);
+        LocalDateTime currentStartPreviousEnd = findDate.atStartOfDay();
+        LocalDateTime currentEnd = findDate.plusDays(1).atStartOfDay();
+        LocalDateTime previousStart = findDate.minusDays(1).atStartOfDay();
+
+        Map<String, Long> breedMap = new HashMap<>();
+
+        // check-point
+        // 한번의 호출을 통해 그룹화하여 이후에 나누기
+        List<File> currentFiles = fileRepository.findByCreatedAtBetween(currentStartPreviousEnd, currentEnd);
+        List<File> previousFiles = fileRepository.findByCreatedAtBetween(previousStart, currentStartPreviousEnd);
+
+        for (File currentFile : currentFiles) {
+            List<String> result = currentFile.getResult();
+            for (String breed : result)
+                breedMap.put(breed, breedMap.getOrDefault(breed, 0L) + 1);
+        }
+        Map<Long, List<String>> sort = new TreeMap<>(Comparator.reverseOrder());
+        for (String breed : breedMap.keySet()) {
+            List<String> tmpList = sort.getOrDefault(breedMap.get(breed), new ArrayList<>());
+            tmpList.add(breed);
+            sort.put(breedMap.get(breed), tmpList);
+        }
+        Map<String, Long> currentDayDogsMap = new LinkedHashMap<>();
+
+        int index = 0;
+        Long otherCount = 0L;
+        for (Long l : sort.keySet()) {
+            List<String> breeds = sort.get(l);
+            for (String breed : breeds) {
+                if (index < 11)
+                    currentDayDogsMap.put(breed, l);
+                else
+                    otherCount += l;
+                index++;
+            }
+        }
+        if (index >= 11 && otherCount != 0)
+            currentDayDogsMap.put("other", otherCount);
+
+        breedMap.clear();
+        sort.clear();
+
+        for (File previousFile : previousFiles) {
+            List<String> result = previousFile.getResult();
+            for (String breed : result)
+                breedMap.put(breed, breedMap.getOrDefault(breed, 0L) + 1);
+        }
+        Map<String, Long> previousDayDogsMap = new LinkedHashMap<>();
+        for (String key : currentDayDogsMap.keySet()) {
+            previousDayDogsMap.put(key, breedMap.getOrDefault(key, 0L));
+        }
+
         return DashboardDto.DogsCountByBreedDto.builder()
-                .currentDayDogs(null)
-                .previousDayDogs(null)
+                .currentDayDogs(currentDayDogsMap)
+                .previousDayDogs(previousDayDogsMap)
                 .build();
     }
 }

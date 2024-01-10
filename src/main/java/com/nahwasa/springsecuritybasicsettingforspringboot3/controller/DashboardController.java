@@ -43,17 +43,7 @@ public class DashboardController {
 
     @GetMapping("/dogs/count")
     public ResponseEntity<?> dogsCountByBreed(@RequestParam(required = false) String date) {
-//        Map<String, Long> map = new LinkedHashMap<>();
-//        map.put("골든 리트리버", 8L);
-//        map.put("강아지", 7L);
-//        map.put("고양이", 5L);
-//        map.put("핏불", 3L);
-//        map.put("other", 20L);
-//        DashboardDto.DogsCountByBreedDto dogsCountByBreedDto = DashboardDto.DogsCountByBreedDto.builder()
-//                .currentDayDogs(map)
-//                .previousDayDogs(map)
-//                .build();
-        DashboardDto.DogsCountByBreedDto dogsCountByBreedDto = fileService.dogsCountByBreed();
+        DashboardDto.DogsCountByBreedDto dogsCountByBreedDto = fileService.dogsCountByBreed(date);
         ResponseDTO responseBody = new ResponseDTO(HttpStatus.OK, "성공", dogsCountByBreedDto);
         return ResponseEntity.ok(responseBody);
     }

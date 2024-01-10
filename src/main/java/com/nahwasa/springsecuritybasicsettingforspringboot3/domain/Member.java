@@ -1,5 +1,6 @@
 package com.nahwasa.springsecuritybasicsettingforspringboot3.domain;
 
+import com.nahwasa.springsecuritybasicsettingforspringboot3.common.TimeBaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "member")
-public class Member extends TimeBaseEntity{
+public class Member extends TimeBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

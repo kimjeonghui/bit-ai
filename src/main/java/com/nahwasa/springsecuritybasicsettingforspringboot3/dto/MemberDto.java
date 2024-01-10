@@ -41,4 +41,13 @@ public class MemberDto {
     public static class MemberCountDto{
         private Long count;
     }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class TodayJoinMemberCountDto{
+        private Long count;
+    }
 }

@@ -1,6 +1,6 @@
 package com.nahwasa.springsecuritybasicsettingforspringboot3.domain;
 
-import com.nahwasa.springsecuritybasicsettingforspringboot3.common.BaseTimeEntity;
+import com.nahwasa.springsecuritybasicsettingforspringboot3.common.TimeBaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name = "file")
-public class File extends BaseTimeEntity {
+public class File extends TimeBaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

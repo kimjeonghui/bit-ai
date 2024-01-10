@@ -53,7 +53,7 @@ public class DashboardController {
 //                .currentDayDogs(map)
 //                .previousDayDogs(map)
 //                .build();
-        DashboardDto.DogsCountByBreedDto dogsCountByBreedDto = fileService.dogsCountByBreed();
+        DashboardDto.DogsCountByBreedDto dogsCountByBreedDto = fileService.dogsCountByBreed(date);
         ResponseDTO responseBody = new ResponseDTO(HttpStatus.OK, "성공", dogsCountByBreedDto);
         return ResponseEntity.ok(responseBody);
     }

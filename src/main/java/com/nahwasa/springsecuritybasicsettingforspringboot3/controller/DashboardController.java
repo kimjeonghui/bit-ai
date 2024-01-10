@@ -47,4 +47,11 @@ public class DashboardController {
         ResponseDTO responseBody = new ResponseDTO(HttpStatus.OK, "성공", dogsCountByBreedDto);
         return ResponseEntity.ok(responseBody);
     }
+
+    @GetMapping("/members/recent")
+    public ResponseEntity<?> recentLoginMemberCount(@RequestParam String limit) {
+        DashboardDto.MemberRecentDto memberRecentDto = memberService.recentLoginMemberCount(limit);
+        ResponseDTO responseBody = new ResponseDTO(HttpStatus.OK, "성공", memberRecentDto);
+        return ResponseEntity.ok(responseBody);
+    }
 }

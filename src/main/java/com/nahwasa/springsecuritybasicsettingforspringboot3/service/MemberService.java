@@ -1,6 +1,7 @@
 package com.nahwasa.springsecuritybasicsettingforspringboot3.service;
 
 import com.nahwasa.springsecuritybasicsettingforspringboot3.domain.Member;
+import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.DashboardDto;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.MemberDto;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -99,5 +102,19 @@ public class MemberService {
         if(byId.isEmpty())throw  new Exception("멤버가 존재하지 않습니다.");
         Member findedMember = byId.get();
         return new MemberDto.AnimalDto(findedMember.getNickname(), findedMember.getAnimal());
+    }
+
+    public DashboardDto.MemberRecentDto recentLoginMemberCount(String limit) {
+        List<Member> membersOrderedByUpdatedAt = memberRepository.findMembersOrderedByUpdatedAt();
+        List<DashboardDto.MemberRecentDto.MemberOutDto> memberList = membersOrderedByUpdatedAt.stream().map(m -> DashboardDto.MemberRecentDto.MemberOutDto.builder()
+                        .id(m.getId())
+                        .nickname(m.getNickname())
+                        .loginTime(m.getUpdatedAt().toLocalDate())
+                        .build())
+                .limit(Long.parseLong(limit))
+                .collect(Collectors.toList());
+        return DashboardDto.MemberRecentDto.builder()
+                .memberList(memberList)
+                .build();
     }
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,8 @@ public class FileService {
 
     public FileDto getById(Long fileId) throws Exception {
         Optional<File> file = fileRepository.findById(fileId);
-        if(file.isEmpty())throw new Exception("파일이 존재하지 않습니다.");
+        if (file.isEmpty())
+            throw new Exception("파일이 존재하지 않습니다.");
         File findedFile = file.get();
         return FileDto.builder().userId(findedFile.getUserId())
                 .resultPath(findedFile.getResultPath())
@@ -49,7 +51,8 @@ public class FileService {
     }
 
     public Map<String, Object> getFiles(int pageNum, int limit) {
-        Pageable pageable = PageRequest.of(pageNum, limit);
+        Sort sort = Sort.by(Sort.Direction.DESC, "updatedAt");
+        Pageable pageable = PageRequest.of(pageNum, limit, sort);
         Page<File> page = fileRepository.findAll(pageable);
 
         List<FileDto> fileDtos = page.getContent().stream().map(file ->

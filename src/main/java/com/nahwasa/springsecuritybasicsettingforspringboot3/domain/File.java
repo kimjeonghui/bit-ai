@@ -25,7 +25,6 @@ public class File extends TimeBaseEntity {
 
     private Long userId;
 
-
     @Builder
     public File(Long userId, String originPath, String resultPath, List<String> result) {
         this.userId = userId;

@@ -4,11 +4,13 @@ import com.nahwasa.springsecuritybasicsettingforspringboot3.common.TimeBaseEntit
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "member")
+@ToString
 public class Member extends TimeBaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

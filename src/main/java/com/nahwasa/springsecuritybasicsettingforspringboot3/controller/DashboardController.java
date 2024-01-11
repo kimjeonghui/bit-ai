@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -50,7 +46,7 @@ public class DashboardController {
 
     @GetMapping("/members/recent")
     public ResponseEntity<?> recentLoginMemberCount(@RequestParam String limit) {
-        DashboardDto.MemberRecentDto memberRecentDto = memberService.recentLoginMemberCount(limit);
+        DashboardDto.MemberRecentDto memberRecentDto = memberService.recentLoginMember(limit);
         ResponseDTO responseBody = new ResponseDTO(HttpStatus.OK, "성공", memberRecentDto);
         return ResponseEntity.ok(responseBody);
     }

@@ -104,8 +104,11 @@ public class MemberService {
         return new MemberDto.AnimalDto(findedMember.getNickname(), findedMember.getAnimal());
     }
 
-    public DashboardDto.MemberRecentDto recentLoginMemberCount(String limit) {
+    public DashboardDto.MemberRecentDto recentLoginMember(String limit) {
         List<Member> membersOrderedByUpdatedAt = memberRepository.findMembersOrderedByUpdatedAt();
+        for (Member member : membersOrderedByUpdatedAt) {
+            System.out.println(member);
+        }
         List<DashboardDto.MemberRecentDto.MemberOutDto> memberList = membersOrderedByUpdatedAt.stream().map(m -> DashboardDto.MemberRecentDto.MemberOutDto.builder()
                         .id(m.getId())
                         .nickname(m.getNickname())

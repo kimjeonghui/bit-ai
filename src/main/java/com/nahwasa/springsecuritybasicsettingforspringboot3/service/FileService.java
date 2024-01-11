@@ -5,6 +5,7 @@ import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.DashboardDto;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.FileDto;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.PageInfoDTO;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.repository.FileRepository;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -102,7 +103,9 @@ public class FileService {
             tmpList.add(breed);
             sort.put(breedMap.get(breed), tmpList);
         }
-        Map<String, Long> currentDayDogsMap = new LinkedHashMap<>();
+
+        List<FileService.Elem> currentDayDogsList = new ArrayList<>();
+
 
         int index = 0;
         Long otherCount = 0L;
@@ -110,14 +113,14 @@ public class FileService {
             List<String> breeds = sort.get(l);
             for (String breed : breeds) {
                 if (index < 11)
-                    currentDayDogsMap.put(breed, l);
+                    currentDayDogsList.add(new FileService.Elem(breed, l));
                 else
                     otherCount += l;
                 index++;
             }
         }
         if (index >= 11 && otherCount != 0)
-            currentDayDogsMap.put("other", otherCount);
+            currentDayDogsList.add(new FileService.Elem("other", otherCount));
 
         breedMap.clear();
         sort.clear();
@@ -127,14 +130,20 @@ public class FileService {
             for (String breed : result)
                 breedMap.put(breed, breedMap.getOrDefault(breed, 0L) + 1);
         }
-        Map<String, Long> previousDayDogsMap = new LinkedHashMap<>();
-        for (String key : currentDayDogsMap.keySet()) {
-            previousDayDogsMap.put(key, breedMap.getOrDefault(key, 0L));
+        List<FileService.Elem> previousDayDogsList = new ArrayList<>();
+        for (Elem elem : previousDayDogsList) {
+            previousDayDogsList.add(new FileService.Elem(elem.kind, breedMap.getOrDefault(elem.kind, 0L)));
         }
 
         return DashboardDto.DogsCountByBreedDto.builder()
-                .currentDayDogs(currentDayDogsMap)
-                .previousDayDogs(previousDayDogsMap)
+                .currentDayDogs(currentDayDogsList)
+                .previousDayDogs(previousDayDogsList)
                 .build();
+    }
+
+    @AllArgsConstructor
+    public static class Elem {
+        private String kind;
+        private Long count;
     }
 }

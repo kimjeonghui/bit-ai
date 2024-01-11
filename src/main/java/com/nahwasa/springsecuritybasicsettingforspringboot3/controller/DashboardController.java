@@ -45,7 +45,7 @@ public class DashboardController {
     }
 
     @GetMapping("/members/recent")
-    public ResponseEntity<?> recentLoginMemberCount(@RequestParam String limit) {
+    public ResponseEntity<?> recentLoginMemberCount(@RequestParam(defaultValue = "10") Integer limit) {
         DashboardDto.MemberRecentDto memberRecentDto = memberService.recentLoginMember(limit);
         ResponseDTO responseBody = new ResponseDTO(HttpStatus.OK, "성공", memberRecentDto);
         return ResponseEntity.ok(responseBody);

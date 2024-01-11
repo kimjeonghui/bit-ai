@@ -1,8 +1,12 @@
 package com.nahwasa.springsecuritybasicsettingforspringboot3.service;
 
+import com.nahwasa.springsecuritybasicsettingforspringboot3.domain.File;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.domain.Member;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.DashboardDto;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.MemberDto;
+import com.nahwasa.springsecuritybasicsettingforspringboot3.exception.Exception400;
+import com.nahwasa.springsecuritybasicsettingforspringboot3.exception.Exception401;
+import com.nahwasa.springsecuritybasicsettingforspringboot3.repository.FileRepository;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,6 +31,7 @@ public class MemberService {
 
     public static final LocalDateTime LOCAL_DATE_TIME = ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toLocalDateTime();
     private final MemberRepository memberRepository;
+    private final FileRepository fileRepository;
 
     @Transactional(readOnly = false)
     public Long join(String nickname, String pw, Integer role) {
@@ -104,18 +110,29 @@ public class MemberService {
         return new MemberDto.AnimalDto(findedMember.getNickname(), findedMember.getAnimal());
     }
 
-    public DashboardDto.MemberRecentDto recentLoginMember(String limit) {
-        List<Member> membersOrderedByUpdatedAt = memberRepository.findMembersOrderedByUpdatedAt();
-        for (Member member : membersOrderedByUpdatedAt) {
-            System.out.println(member);
+    public DashboardDto.MemberRecentDto recentLoginMember(Integer limit) {
+        List<File> orderByCreatedAt = fileRepository.findOrderByCreatedAt();
+        List<DashboardDto.MemberRecentDto.MemberOutDto> memberList = new ArrayList<>();
+        int count = 0;
+        for (File file : orderByCreatedAt) {
+            if (count == limit)
+                break;
+            Member member = memberRepository.findById(file.getUserId()).orElseThrow(
+                    () -> new Exception400("userId", "존재하지 않는 유저입니다.")
+            );
+            for (String breed : file.getResult()) {
+                if (count == limit)
+                    break;
+                count++;
+                memberList.add(DashboardDto.MemberRecentDto.MemberOutDto.builder()
+                                .id(member.getId())
+                                .nickname(member.getNickname())
+                                .breed(breed)
+                                .entryTime(member.getUpdatedAt().toLocalDate())
+                        .build());
+            }
         }
-        List<DashboardDto.MemberRecentDto.MemberOutDto> memberList = membersOrderedByUpdatedAt.stream().map(m -> DashboardDto.MemberRecentDto.MemberOutDto.builder()
-                        .id(m.getId())
-                        .nickname(m.getNickname())
-                        .loginTime(m.getUpdatedAt().toLocalDate())
-                        .build())
-                .limit(Long.parseLong(limit))
-                .collect(Collectors.toList());
+
         return DashboardDto.MemberRecentDto.builder()
                 .memberList(memberList)
                 .build();

@@ -1,5 +1,4 @@
 package com.nahwasa.springsecuritybasicsettingforspringboot3.service;
-
 import com.nahwasa.springsecuritybasicsettingforspringboot3.domain.File;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.DashboardDto;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.FileDto;
@@ -7,6 +6,7 @@ import com.nahwasa.springsecuritybasicsettingforspringboot3.dto.PageInfoDTO;
 import com.nahwasa.springsecuritybasicsettingforspringboot3.repository.FileRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -94,8 +94,9 @@ public class FileService {
 
         for (File currentFile : currentFiles) {
             List<String> result = currentFile.getResult();
-            for (String breed : result)
+            for (String breed : result) {
                 breedMap.put(breed, breedMap.getOrDefault(breed, 0L) + 1);
+            }
         }
         Map<Long, List<String>> sort = new TreeMap<>(Comparator.reverseOrder());
         for (String breed : breedMap.keySet()) {
@@ -104,8 +105,7 @@ public class FileService {
             sort.put(breedMap.get(breed), tmpList);
         }
 
-        List<FileService.Elem> currentDayDogsList = new ArrayList<>();
-
+        List<DashboardDto.DogsCountByBreedDto.Elem> currentDayDogsList = new ArrayList<>();
 
         int index = 0;
         Long otherCount = 0L;
@@ -113,14 +113,14 @@ public class FileService {
             List<String> breeds = sort.get(l);
             for (String breed : breeds) {
                 if (index < 11)
-                    currentDayDogsList.add(new FileService.Elem(breed, l));
+                    currentDayDogsList.add(new DashboardDto.DogsCountByBreedDto.Elem(breed, l));
                 else
                     otherCount += l;
                 index++;
             }
         }
         if (index >= 11 && otherCount != 0)
-            currentDayDogsList.add(new FileService.Elem("other", otherCount));
+            currentDayDogsList.add(new DashboardDto.DogsCountByBreedDto.Elem("other", otherCount));
 
         breedMap.clear();
         sort.clear();
@@ -130,20 +130,14 @@ public class FileService {
             for (String breed : result)
                 breedMap.put(breed, breedMap.getOrDefault(breed, 0L) + 1);
         }
-        List<FileService.Elem> previousDayDogsList = new ArrayList<>();
-        for (Elem elem : previousDayDogsList) {
-            previousDayDogsList.add(new FileService.Elem(elem.kind, breedMap.getOrDefault(elem.kind, 0L)));
+        List<DashboardDto.DogsCountByBreedDto.Elem> previousDayDogsList = new ArrayList<>();
+        for (DashboardDto.DogsCountByBreedDto.Elem elem : currentDayDogsList) {
+            previousDayDogsList.add(new DashboardDto.DogsCountByBreedDto.Elem(elem.getKind(), breedMap.getOrDefault(elem.getKind(), 0L)));
         }
 
         return DashboardDto.DogsCountByBreedDto.builder()
                 .currentDayDogs(currentDayDogsList)
                 .previousDayDogs(previousDayDogsList)
                 .build();
-    }
-
-    @AllArgsConstructor
-    public static class Elem {
-        private String kind;
-        private Long count;
     }
 }

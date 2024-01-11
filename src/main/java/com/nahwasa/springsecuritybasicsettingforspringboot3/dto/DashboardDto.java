@@ -7,6 +7,7 @@ import com.nahwasa.springsecuritybasicsettingforspringboot3.service.FileService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,8 +19,18 @@ public class DashboardDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class DogsCountByBreedDto{
-        private List<FileService.Elem> currentDayDogs;
-        private List<FileService.Elem> previousDayDogs;
+        private List<Elem> currentDayDogs;
+        private List<Elem> previousDayDogs;
+
+        @Getter
+        @Builder
+        @AllArgsConstructor
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+        public static class Elem {
+            private String kind;
+            private Long count;
+        }
     }
 
     @Getter
@@ -38,7 +49,8 @@ public class DashboardDto {
         public static class MemberOutDto {
             private Long id;
             private String nickname;
-            private LocalDate loginTime;
+            private String breed;
+            private LocalDate entryTime;
         }
     }
 }
